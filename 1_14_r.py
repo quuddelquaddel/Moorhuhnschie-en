@@ -1,6 +1,7 @@
 from turtle import Screen, Turtle
 import random, time, pygame, winsound, json, os
 from pygame import mixer                             #der Mixer ist dafür da, daß WÄHREND etwas erscheint GLEICHZEITIG ein Geräusch ertönt (und nicht nacheinander)
+from moorhuhn_2 import Level
 
 try:
     import winsound                                             #Sound Wiedergabe Schnittstelle, bietet Zugriff auf die grundlegende Sound- Spielmaschinerie
