@@ -1,4 +1,5 @@
 import pygame     #Bibliotheken importieren; subprocess ruft das eigentliche Spiel auf
+from pygame import mixer            #der Mixer ist dafür da, daß WÄHREND der Text erscheint GLEICHZEITIG ein Geräusch ertönt (und nicht nacheinander)
 
 pygame.init()                                                               #das pygame-Modul wird initialisiert
 screen=pygame.display.set_mode((850,250))                                           #ein leeres (noch farbloses) Feld der Größe 800 x 250 wird erstellt
@@ -34,12 +35,15 @@ class DynamicText(object):
                 self.rendered=self.font.render(next(self._gen), True, (255,255,255))#Textfarbe (ich habe weiß genommen)
             except StopIteration:                               #sobald der Text fertiggezeigt ist und somit die Aufgabenstellung dieses Programmabschnitts erfüllt ist
                 self.done=True                                  #....gilt die Aufgabenstellung dieses Programmabschnitts ab hier auch offiziell als erfüllt, d.h. die if Anweisungist erfüllt und stoppt
+                time.sleep(2) 
                 
     def textverschiebung(self, screen):
         screen.blit(self.rendered, self.pos)                                #die blit Fkt lässt uns das Textbild verschieben
    
 text=("Viel Spaß beim Computerspiel ''Moorhuhn abschießen'' !")     #der Text, den wir anzeigen wollen, bekommt hier eine eigene Konstante
 message=DynamicText(font, text, (65,120)) 
+mixer.music.load("Tastatur.wav")                        #lädt nur die Hintergrundmusik (Tastaturgeräusch)
+mixer.music.play()                                      #....und spielt es ab
 
 while True:                                             #while True ist IMMER erfüllt
     for event in pygame.event.get():
@@ -53,5 +57,6 @@ while True:                                             #while True ist IMMER er
         pygame.display.flip()                           #der Bildschirm (Display) zeigt immer neue Bilder, also im Klartext: Das Bild bleibt nicht stehen
         continue                                        #die while Schleife (s.o.) wird weitergemacht (praktisch das Gegenteil von break)
     break                                               #aber sobald der ganze Text durch ist, gibt es sehr wohl ein break auf der Ebene der for-Schleife (das andere break war innerhalb der for Schleife)=>while Schleife endet
+    mixer.music.stop()                                  #Hintergrundmusik (Tastaturgeräusch) endet
     
-#pygame.quit()                                           #wir brauchen pygame nicht mehr
+pygame.quit()                                           #wir brauchen pygame nicht mehr
