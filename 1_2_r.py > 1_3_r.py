@@ -22,6 +22,10 @@ class Huhn(Turtle):
         y = y + self.vy
         self.goto(x,y)
 
+    def raus_nach_rechts(self):
+        x, y = self.position()
+        return x > 340 or abs(y) > 250
+
 class MoorhuhnSpiel:    #Kombiniert die Bestandteile des Moorhuhnspiels. Legt Spielablauf fest
     def __init__(self):
         self.screen = Screen()
@@ -50,13 +54,16 @@ class MoorhuhnSpiel:    #Kombiniert die Bestandteile des Moorhuhnspiels. Legt Sp
         # Initialisierung
         self.screen.onkeypress(None, "space")
         self.melde("SPIEL LÄUFT!")
+        self.schuesse = 0
         for huhn in self.huehner_links:
             huhn.zumstart_links()
 
         # Ausführung
-        while True:  # SCHUESSE:
+        while self.schuesse < 5:  # SCHUESSE:
             for huhn in self.huehner_links:
                 huhn.schritt_links_rechts()
+                if huhn.raus_nach_rechts():
+                    huhn.zumstart_links()
         self.screen.onclick(None)
 
         # Abschluss und Ergebnis
