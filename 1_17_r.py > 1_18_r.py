@@ -4,11 +4,54 @@ from pygame.locals import*
 
 pygame.init()                   #initialisiere Pygame Bibliothek
 
-NACHRICHT="""test
+NACHRICHT="""Sie haben das Spiel
+''Moorhuhn abschießen ''
+gespielt!
 
-bla
+Ich hoffe es hat Ihnen Spaß gemacht!
+Bumm, bumm, peng, peng!
 
-bla""" .split('\n')                      #'split'-Fkt: Text in Liste umwandeln; das Trennzeichen ('\n') ist der Zeilenneubeginn
+Wieviel haben Sie getroffen?
+Welchen Score haben Sie erreicht?
+
+Ceaucescu, der ehemalige Diktator
+von Rumänien wäre sehr stolz auf Sie!
+Er war leidenschaftlicher Jäger.
+
+Ok, am Schluss wurde auch er
+erschossen.
+
+Aber nicht in der Luft, sondern am 
+Boden.
+
+Wer, weiß: Vielleicht schaffen Sie es 
+bei Ihrer Schießkunst einmal zum
+Diktator!
+
+Wie heißt es so schön?:
+"Moorhühner rauschen durch die Nacht
+im wilden Schrei nach Norden.
+
+Doch nicht alle haben es geschafft.
+Man wollte sie ermorden!"
+
+...na ja, nur so reimt es sich.
+
+Laut Wikipedia wurde folgender Witz
+zum besten gekürt: Zwei Jäger sind       
+im Wald unterwegs, als einer von 
+ihnen zusammenbricht. Er scheint 
+nicht mehr zu atmen, und seine
+Augen sind glasig. Der andere Typ
+zückt sein Telefon, ruft den Notdienst
+an und stößt hervor: ‚Mein Freund
+ist tot! Was kann ich nur machen?‘
+Darauf der Telefonist: ‚Beruhigen
+Sie sich. Ich kann Ihnen helfen.
+Zuerst sollten wir sicherstellen,
+dass er tot ist.‘ Kurze Pause, dann
+ein Schuss. Zurück am Telefon sagt
+er: ‚OK, was jetzt?‘""" .split('\n')                      #'split'-Fkt: Text in Liste umwandeln; das Trennzeichen ('\n') ist der Zeilenneubeginn
 
 class Credits:
     def __init__(self, bildschirm, liste):
