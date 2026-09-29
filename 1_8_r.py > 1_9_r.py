@@ -216,3 +216,65 @@ if __name__ == "__main__":
     Screen().mainloop()                                         #prüft permanent, ob ein Event auftritt
     
 mixer.music.stop()                                  #Hintergrundmusik stoppt
+
+        #############################################################################  #
+        #                                                                           # ##
+        #       Hier wírd eine Highscoreliste der Top 3 erstellt und verwaltet      ###############################################################
+        #                                                                           # ##
+        #############################################################################  #
+
+def Schnellfkt_Neueintrag():
+    Name=input("Geben Sie Ihren Namen ein! ")
+    Neueintrag=[]
+    Neueintrag.append(Punkte)
+    Neueintrag_Namenseintrag=[]
+    Neueintrag_Namenseintrag.append(Name)
+    Neueintrag.append(Neueintrag_Namenseintrag)
+    Highscores.append(Neueintrag)
+    Highscores.sort(reverse=True)
+    
+if Punkte>0:                                        #man sollte zumindestens etwas getroffen haben, um in die Bestenliste zu kommen
+    if os.path.exists("Bestenliste.json"):          #falls die Datei der Bestenliste bereits schon existiert
+        filename = 'Bestenliste.json'
+        with open(filename) as file_object:
+            Highscores = json.load(file_object)     #hier wird die - bereits bestehende(!) - Highscoreliste geladen
+        if len(Highscores) < 3:                     #hier wird dafür gesorgt, daß ein Highscore-Array der Länge 3 entsteht
+            for i in range(len(Highscores)):
+                if Highscores[i][0]==Punkte:        #die Punkte sind gleich groß wie ein bereits existierender Eintrag
+                    Name=input("Geben Sie Ihren Namen ein! ")
+                    Highscores[i][1].append(Name)   #nur der neue Name wird (zu dem alten, bereits bestehenden) hinzufegügt
+                    break                           #die for-Schleife wird ab dem Zeitpunkt abgebrochen, ab dem irgendetwas Neues ins Array "Bestenliste" eingetragen wurde
+                else:                               #die Punkte sind zueinander verschieden
+                    Schnellfkt_Neueintrag()
+                    filename= 'Bestenliste.json'                
+                break
+        elif Punkte < Highscores[-1][0]:            #ab hier HAT das Highscore-Array bereits schon die Länge 3
+            print("Schade! Damit haben Sie es leider nicht in die Top 3 geschafft!")
+        else:                                       #der Spieler hat es zum 1x in die Highscoreliste geschafft
+            for i in range(len(Highscores)):
+                if Highscores[i][0] < Punkte:       #größerer Wert als der kleinste vorkommende Wert gefunden => der letzte (kleinste) Wert des Arrays fliegt raus
+                    Schnellfkt_Neueintrag()         #ab hier wird die bereits bestehende Liste sortiert (aber noch nicht gespeichert)<-Sortieren ist für die Highscoreliste wichtig!
+                    del(Highscores[-1])             #der letzte kleinste Wert ganz rechts im Array wird gelöscht, damit die Highscores noch immer die Top 3 repräsentieren
+                break
+                if Highscores[i][0]==Punkte:        #gleichgroßer Wert gefunden
+                    Name=input("Geben Sie Ihren Namen ein! ")
+                    Highscores[i][1].append(Name)   #nur der neue Name wird (zu dem alten, bereits bestehenden) hinzufegügt
+                break
+        filename= 'Bestenliste.json'
+        with open(filename, 'w') as file_object:            #ab hier wird auch gespeichert
+            json.dump(Highscores, file_object)
+        with open(filename) as file_object:             #ab hier wird die bisherige Bestenliste in der Python Shell Zeile für Zeile gedruckt
+            bisherige_Bestenliste=json.load(file_object)    #....erst laden
+        for i in bisherige_Bestenliste:                     #....dann drucken
+            print(i)
+    else:                                           #falls die Datei der Bestenliste noch nicht existiert, ist dieser else-Block für die Erstellung dieser neuen Datei zuständig
+        Highscores=[]                               #hier wird eine NEUE Highscoreliste erstellt
+        Schnellfkt_Neueintrag()               
+        filename= 'Bestenliste.json'                #...und der neuen Datei Ihren Namen gegeben
+        with open(filename, 'w') as file_object:    #ab hier wird auch gespeichert
+            json.dump(Highscores, file_object)
+        with open(filename) as file_object:         #ab hier wird die neue, initiale Bestenliste zum 1x (und mit dem 1.Eintrag) in die Python Shell geladen....
+            bisherige_Bestenliste=json.load(file_object)
+        print(bisherige_Bestenliste)                #....und gedruckt
+else:                                               #das ist der Fall, daß alle Schüsse danebengingen
+    print("Sie haben kein einziges Moorhuhn abgeschossen!" )
