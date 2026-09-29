@@ -247,7 +247,7 @@ if Punkte>0:                                        #man sollte zumindestens etw
                 else:                               #die Punkte sind zueinander verschieden
                     Schnellfkt_Neueintrag()
                     filename= 'Bestenliste.json'                
-                break
+                    break
         elif Punkte < Highscores[-1][0]:            #ab hier HAT das Highscore-Array bereits schon die Länge 3
             print("Schade! Damit haben Sie es leider nicht in die Top 3 geschafft!")
         else:                                       #der Spieler hat es zum 1x in die Highscoreliste geschafft
@@ -255,11 +255,11 @@ if Punkte>0:                                        #man sollte zumindestens etw
                 if Highscores[i][0] < Punkte:       #größerer Wert als der kleinste vorkommende Wert gefunden => der letzte (kleinste) Wert des Arrays fliegt raus
                     Schnellfkt_Neueintrag()         #ab hier wird die bereits bestehende Liste sortiert (aber noch nicht gespeichert)<-Sortieren ist für die Highscoreliste wichtig!
                     del(Highscores[-1])             #der letzte kleinste Wert ganz rechts im Array wird gelöscht, damit die Highscores noch immer die Top 3 repräsentieren
-                break
+                    break
                 if Highscores[i][0]==Punkte:        #gleichgroßer Wert gefunden
                     Name=input("Geben Sie Ihren Namen ein! ")
                     Highscores[i][1].append(Name)   #nur der neue Name wird (zu dem alten, bereits bestehenden) hinzufegügt
-                break
+                    break
         filename= 'Bestenliste.json'
         with open(filename, 'w') as file_object:            #ab hier wird auch gespeichert
             json.dump(Highscores, file_object)
