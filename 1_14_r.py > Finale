@@ -11,7 +11,7 @@ except:
     print("KEIN TON!") 
 
 SCHÜSSE = 20                                     #Es sind am Anfang 20 Schuss vorhanden
-GESCHWINDIGKEIT = 1                              #es ist eine Geschwindigkeit vorhanden, die den Schwierigkeitsgrad immer schneller werdender Hühner symbolisiert
+GESCHWINDIGKEIT = LEVEL/10                              #es ist eine Geschwindigkeit vorhanden, die den Schwierigkeitsgrad immer schneller werdender Hühner symbolisiert
 BREITE, HÖHE = 1280, 750                         #Höhe und Breite der Hintergrundbilder werden hier als feste Zahlen angegeben
 TREFFER = "getroffen.wav"                           #der Ton, wenn ein Huhn getroffen wird, also Absturzgeräusch
 DANEBEN = "daneben.wav"                             #der Ton, wenn ein Huhn nicht getroffen wird
@@ -123,7 +123,10 @@ class Huhn(Turtle):
 class MoorhuhnSpiel (object):    #Kombiniert die Bestandteile des Moorhuhnspiels. Legt Spielablauf fest
     def __init__(self):						#Kombiniert Elemente des Moorhuhn Spiels.
         self.bild = bild= Bildmanager(BREITE, HÖHE) 		#erzeugt Grafik-Fenster
-        bild.screen.bgpic("landschaft.gif")                  #'bgpic' ist eine Methode, um ein Hintergrundbild zu installieren
+        if Level <=6:
+            bild.screen.bgpic("ostsee.png")                     #'bgpic' ist eine Methode, um ein Hintergrundbild zu installieren
+        elif Level >=7:
+            bild.screen.bgpic("bauernhof.png")
         bild.schrift("Leertaste drücken, um Spiel zu beginnen!")
         bild.screen.register_shape("huhn01.gif")                #'register_shape' bekommt einen Namen als Argument, der mit '.gif' endet=>dieser Name wird als Bilddatei aufgefaßt und diese....
         bild.screen.register_shape("huhn02.gif")                #....Bilddatei als Turtle shape registriert. Danach kann die Methode 'shape()' aufgerufen werden, um der Turtle diese Gestalt....
@@ -279,3 +282,6 @@ if Punkte>0:                                        #man sollte zumindestens etw
         print(bisherige_Bestenliste)                #....und gedruckt
 else:                                               #das ist der Fall, daß alle Schüsse danebengingen
     print("Sie haben kein einziges Moorhuhn abgeschossen!" )
+
+from moorhuhn_3 import*
+from moorhuhn_4 import*
