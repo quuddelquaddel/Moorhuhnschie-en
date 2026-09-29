@@ -62,6 +62,7 @@ while running:                              #diese Schleife ist immer wahr, weil
     cred.update()                           #hier wird dafür gesorgt, daß der Text runterscrollt
     cred.Übertragung(screen)                #auf die NACHRICHT (siehe ganz oben) wird die Fkt "Übertragung" angewendet und auf dem Bildschirm gezeigt
     pygame.display.update()                 #der Bildschirm wird ständig geupdated
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type==pygame.QUIT:         #wenn der scrollende Text vorbei ist
             mixer.music.stop()              #eigentlich insofern überflüssig, als dass die Musik ohnehin nur 1x gespielt wird
