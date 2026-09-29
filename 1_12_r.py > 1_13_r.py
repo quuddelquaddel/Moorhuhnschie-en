@@ -1,6 +1,20 @@
 import pygame     #Bibliotheken importieren; subprocess ruft das eigentliche Spiel auf
 from pygame import mixer            #der Mixer ist dafür da, daß WÄHREND der Text erscheint GLEICHZEITIG ein Geräusch ertönt (und nicht nacheinander)
 
+while True:
+    try:
+        Level=input("Welche Geschwindigkeit (=Level) von 1 bis 10 sollen die Hühner haben? ")
+        Level=int(Level)
+        while (Level<=0) or (Level>10):                     #hier wird sichergestellt, daß nur positive Zahlen eingegeben werden: Es gibt die Levels 1 bis 10
+            print("Keine negativen Zahlen eingeben! Nur Zahlen von 1 bis 10 eingeben!")
+            Level=input("Welche Zahl? ")
+            Level=int(Level)
+        break
+    except ValueError as e:                                 #hier wird sichergestellt, daß nur Integer Zahlen eingegeben werden
+        print("Fehlermeldung! ", e)
+        print("Fehler! Nur natürliche Zahlen eingeben!")
+print(Level)
+
 pygame.init()                                                               #das pygame-Modul wird initialisiert
 screen=pygame.display.set_mode((850,250))                                           #ein leeres (noch farbloses) Feld der Größe 800 x 250 wird erstellt
 
@@ -36,7 +50,8 @@ class DynamicText(object):
             except StopIteration:                               #sobald der Text fertiggezeigt ist und somit die Aufgabenstellung dieses Programmabschnitts erfüllt ist
                 self.done=True                                  #....gilt die Aufgabenstellung dieses Programmabschnitts ab hier auch offiziell als erfüllt, d.h. die if Anweisungist erfüllt und stoppt
                 time.sleep(2) 
-                
+                subprocess.Popen("moorhuhn_2.py", shell=True)   #rufe das richtige Spiel auf
+
     def textverschiebung(self, screen):
         screen.blit(self.rendered, self.pos)                                #die blit Fkt lässt uns das Textbild verschieben
    
