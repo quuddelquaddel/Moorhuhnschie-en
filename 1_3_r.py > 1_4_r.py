@@ -50,9 +50,14 @@ class MoorhuhnSpiel:    #Kombiniert die Bestandteile des Moorhuhnspiels. Legt Sp
         self.schreiber.clear()
         self.schreiber.write(txt, font=("Arial", 18, "bold"))
 
+    def schuss(self, x, y):
+        self.schuesse = self.schuesse + 1
+        self.melde("SCHUSS {0}".format(self.schuesse))
+    
     def spiel(self):
         # Initialisierung
         self.screen.onkeypress(None, "space")
+        self.screen.onclick(self.schuss)
         self.melde("SPIEL LÄUFT!")
         self.schuesse = 0
         for huhn in self.huehner_links:
