@@ -55,7 +55,8 @@ clock=pygame.time.Clock()
 running=True
 cred=Credits(bildschirm,                    #hier wird auf die Klasse zugegriffen: Es wird ein Bildschirm erzeugt mitsamt dessen NACHRICHT (s.o.)
              NACHRICHT)
-
+mixer.music.load("Abspannmusik.wav")        #hier wird die Abspannmusik geladen
+mixer.music.play(1)                         #Musik wird genau 1x gespielt
 while running:                              #diese Schleife ist immer wahr, weil running auf TRUE gesetzt wurde (s.o.) => Endlosschleife
     screen.fill((0,0,0))                    #Hintergrundfarbe (0,0,0) ist schwarz
     cred.update()                           #hier wird dafür gesorgt, daß der Text runterscrollt
