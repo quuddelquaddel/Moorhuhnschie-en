@@ -1,9 +1,19 @@
 from turtle import Screen, Turtle
-import random, pygame 
+import random, time, pygame, winsound, json, os
+from pygame import mixer
+
+try:
+    import winsound                                             #Sound Wiedergabe Schnittstelle, bietet Zugriff auf die grundlegende Sound- Spielmaschinerie
+    _SOUND = True
+except:
+    _SOUND = False
+    print("KEIN TON!") 
 
 SCHÜSSE = 20
 GESCHWINDIGKEIT = 1
 BREITE, HÖHE = 1280, 750
+TREFFER = "getroffen.wav"
+DANEBEN = "daneben.wav"
 
 pygame.init()
 
@@ -44,6 +54,11 @@ class Huhn(Turtle):
         self.showturtle()                                         #.....jetzt sind die Hühner da
 
     def schritt_links_rechts(self):
+        global Strafpunkt_links_rechts                          #die Strafpunkte beziehen sich auf nicht abgeschossene und damit entkommene Hühner
+        Strafpunkt_links_rechts=1                               #Strafpunkt=1, weil wenn Strafpunkt=0 und alle Hühner abgeschossen würden und kein Huhn entkommt, unten durch 0 geteilt werden müßte. So wird durch 1 geteilt.
+        if self.ausdemspiel_links:
+            time.sleep(0.01)   
+            return
         if self.tot:
             self.vy = self.vy - 0.5 * GESCHWINDIGKEIT           #hier fällt das angeschossene Huhn runter
         x, y = self.position()
@@ -51,37 +66,39 @@ class Huhn(Turtle):
         y = y + self.vy                                         #hier die Y-Koordinate des herunterfallenden Huhns. Bei 'self.vy**2' fallen die Hühner nach oben :P
         self.goto(x,y)
         if x > BREITE//2 + 20 or abs(y) > HÖHE//2 + 10:         #die '+20' bzw. die '+10' sorgen dafür, daß die Hühner immer etwas weiterfliegen als die Bildgröße=>Hühner sind aus dem Bild raus
+            Strafpunkt_links_rechts=Strafpunkt_links_rechts+1   #pro entkommenes (=nicht abgeschossenes) Huhn gibt es 1 Strafpunkt
             if self.spiel.schuss != SCHÜSSE:
                 self.start_links()
             else:                                               #dieser Abschnitt sorgt dafür, daß die Hühner bei Spielende nicht weiterfliegen
                 self.ausdemspiel_links = True
 
     def getroffen(self, x, y):
-        if self.tot or self.spiel.schuss==SCHÜSSE: 		#"self.spiel.schuss==SCHÜSSE" bedeutet game over
+        if self.tot or self.spiel.schuss==SCHÜSSE: 		        #"self.spiel.schuss==SCHÜSSE" bedeutet game over
             return
         self.tot = True
         self.getroffen = True
         self.spiel.score = self.spiel.score+1 
 
-class MoorhuhnSpiel:                  #Kombiniert die Bestandteile des Moorhuhnspiels. Legt Spielablauf fest  
-    def __init__(self):						#Kombiniert Elemente des Moorhuhn Spiels.
-        self.bild = bild= Bildmanager(BREITE, HÖHE) 		#erzeugt Grafik-Fenster
-        bild.screen.bgpic("landschaft.gif")                  #'bgpic' ist eine Methode, um ein Hintergrundbild zu installieren
+class MoorhuhnSpiel:                                          #Kombiniert die Bestandteile des Moorhuhnspiels. Legt Spielablauf fest  
+    def __init__(self):						                  #Kombiniert Elemente des Moorhuhn Spiels.
+        self.bild = bild= Bildmanager(BREITE, HÖHE) 		  #erzeugt Grafik-Fenster
+        bild.screen.bgpic("landschaft.gif")                   #'bgpic' ist eine Methode, um ein Hintergrundbild zu installieren
         bild.schrift("Leertaste drücken, um Spiel zu beginnen!")
         bild.screen.register_shape("huhn01.gif")                #'register_shape' bekommt einen Namen als Argument, der mit '.gif' endet=>dieser Name wird als Bilddatei aufgefaßt und diese....
         bild.screen.register_shape("huhn02.gif")                #....Bilddatei als Turtle shape registriert. Danach kann die Methode 'shape()' aufgerufen werden, um der Turtle diese Gestalt....
 
         self.huehner_links = [Huhn("huhn01.gif", self),
                               Huhn("huhn02.gif", self)]
+        
         self.gameover = True                                    #jetzt kann ein neues Spiel beginnen
         bild.screen.onclick(self.schuss, 1)
         bild.screen.onkey(self.spiel, "space")                  #"onkey" heißt soviel wie: "Wenn eine Taste gedrückt wird", hier 'space', soll die Fkt 'spiel' aufgerufen werden
         bild.screen.listen()                                    #bewirkt, dass nach dem Tastendruck (s.o.) das Spiel auch tatsächlich anfängt
-        bild.screen.getcanvas().config(cursor="circle") 	#get into Tkinter
+        bild.screen.getcanvas().config(cursor="circle") 	    #get into Tkinter
         
     def spiel(self):
         if not self.gameover:
-            return   						#altes Spiel läuft noch
+            return   						                    #altes Spiel läuft noch
         self.bild.schrift("SPIEL LÄUFT!")
         self.schuss = 0
         self.score = 0
@@ -100,16 +117,22 @@ class MoorhuhnSpiel:                  #Kombiniert die Bestandteile des Moorhuhns
        
     def schuss(self, x, y):
         if self.schuss == SCHÜSSE:
-            return 						#es läuft kein Spiel, also kein Schuß
+            return 						                            #es läuft kein Spiel, also kein Schuß
         self.schuesse = self.schuesse + 1
+        klangdatei = DANEBEN
         for huhn in self.huehner_links: 
             if huhn.getroffen:
+                klangdatei = TREFFER
                 huhn.getroffen = False
                 break
         if self.schuss == SCHÜSSE:
             self.bild.schrift("SPIEL VORBEI!")
         else:        
             self.bild.schrift("Treffer/Schüsse: %d/%d" %(self.score, self.schuss))  #%d heißt: vz-behaftete Ganzzahl
+        self.klang(klangdatei)
+    
+    def klang(self, soundfile):
+        winsound.PlaySound(soundfile, winsound.SND_ASYNC)   #der Befehl 'SND_ASYNC' sorgt dafür, daß das Abspielen des Klangs das Spiel nicht unterbricht, bzw. anhält 
 
 def main():  							#Hauptfunktion
     MoorhuhnSpiel()
