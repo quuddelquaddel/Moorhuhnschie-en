@@ -18,6 +18,8 @@ class Credits:
         self.schriftfarbe=(255,255,255)                     #Schriftfarbe weiß
         self.Bildschirmmitte=self.bildschirm.height/2 +5    #wo ist die Schrift anzusetzen (in der Mitte)
         self.zeilenabstand=60                               #hier wird der Zeilenabstand festgelegt 
+        self.timer=0.0
+        self.delay=0                                        #keine Verzögerung, d.h. SOFORT den scrollenden Text anzeigen
         self.Bildschirmoberfläche()                         #Initialisierung der Bildschirmoberfläche
 
     def Text(self, Nachricht):
@@ -26,7 +28,9 @@ class Credits:
         text=font.render(Nachricht,                         #render=übertragen: Der lange obige Text (s.o.)
                          True,                              #ja, es wird etwas übertragen
                          self.schriftfarbe)                 #...mitsamt dessen Schriftfarbe
-        return text
+        return text.get_rect(center=(self.bildschirm.centerx, #wo ist der Text enzusiedeln ? In der Mitte
+                                   self.bildschirm.centery+self.Bildschirmmitte))
+        return text, rect                                   #letzten Endes wird der Text und das Bildschirmrechteck, auf gut Deutsch gesagt, der Bilschirm, übertragen
 
     def Bildschirmoberfläche(self):
         self.text=[]                                        #am Anfang ist das Array noch leer
@@ -47,6 +51,7 @@ class Credits:
 
 screen=pygame.display.set_mode((800,600))   #Bildschirmgröße
 bildschirm=screen.get_rect()                #der Bildschirm an sich
+clock=pygame.time.Clock()
 running=True
 cred=Credits(bildschirm,                    #hier wird auf die Klasse zugegriffen: Es wird ein Bildschirm erzeugt mitsamt dessen NACHRICHT (s.o.)
              NACHRICHT)
@@ -56,8 +61,8 @@ while running:                              #diese Schleife ist immer wahr, weil
     cred.update()                           #hier wird dafür gesorgt, daß der Text runterscrollt
     cred.Übertragung(screen)                #auf die NACHRICHT (siehe ganz oben) wird die Fkt "Übertragung" angewendet und auf dem Bildschirm gezeigt
     pygame.display.update()                 #der Bildschirm wird ständig geupdated
+    clock.tick(60)                          #hier ist die Geschwindigkeit des scrollenden Textes
     for event in pygame.event.get():
         if event.type==pygame.QUIT:         #wenn der scrollende Text vorbei ist
-            mixer.music.stop()              #eigentlich insofern überflüssig, als dass die Musik ohnehin nur 1x gespielt wird
             running=False                   #das Programm läuft nicht mehr
             pygame.quit()                   #alles ist beendet
