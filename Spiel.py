@@ -1,6 +1,7 @@
 from turtle import Screen, Turtle
 import random, time, pygame, winsound, json, os
 from pygame import mixer                             #der Mixer ist dafür da, daß WÄHREND etwas erscheint GLEICHZEITIG ein Geräusch ertönt (und nicht nacheinander)
+from Vorspann import Level
 
 try:
     import winsound                                             #Sound Wiedergabe Schnittstelle, bietet Zugriff auf die grundlegende Sound- Spielmaschinerie
@@ -10,7 +11,7 @@ except:
     print("KEIN TON!") 
 
 SCHÜSSE = 20                                     #Es sind am Anfang 20 Schuss vorhanden
-GESCHWINDIGKEIT = 1                                 #es ist eine Geschwindigkeit vorhanden, die den Schwierigkeitsgrad immer schneller werdender Hühner symbolisiert
+GESCHWINDIGKEIT = Level/10                                #es ist eine Geschwindigkeit vorhanden, die den Schwierigkeitsgrad immer schneller werdender Hühner symbolisiert
 BREITE, HÖHE = 1280, 750                         #Höhe und Breite der Hintergrundbilder werden hier als feste Zahlen angegeben
 TREFFER = "getroffen.wav"                         #der Ton, wenn ein Huhn getroffen wird, also Absturzgeräusch
 DANEBEN = "daneben.wav"                         #der Ton, wenn ein Huhn nicht getroffen wird
@@ -122,8 +123,11 @@ class Huhn(Turtle):
 class MoorhuhnSpiel:                                          #hier beginnt das eigentliche Spiel  
     def __init__(self):						                  #Kombiniert Elemente des Moorhuhn Spiels.
         self.bild = bild= Bildmanager(BREITE, HÖHE) 		  #erzeugt Grafik-Fenster
-        bild.screen.bgpic("landschaft.gif")                   #'bgpic' ist eine Methode, um ein Hintergrundbild zu installieren
-        bild.schrift("Leertaste drücken, um Spiel zu beginnen!") #initial wird eine Schrift angezeigt, die dem Spieler sagen, was er tun soll
+        if Level <=6:
+            bild.screen.bgpic("ostsee.png")                     #'bgpic' ist eine Methode, um ein Hintergrundbild zu installieren
+        elif Level >=7:
+            bild.screen.bgpic("bauernhof.png")
+        bild.schrift("Leertaste drücken, um Spiel zu beginnen!")
         bild.screen.register_shape("huhn01.gif")                #'register_shape' bekommt einen Namen als Argument, der mit '.gif' endet=>dieser Name wird als Bilddatei aufgefaßt und diese....
         bild.screen.register_shape("huhn02.gif")                #....Bilddatei als Turtle shape registriert. Danach kann die Methode 'shape()' aufgerufen werden, um der Turtle diese Gestalt....
         #########################################################
@@ -178,7 +182,7 @@ class MoorhuhnSpiel:                                          #hier beginnt das 
             self.klang(APPLAUS)                                     #ertönt ein Applaus
             
         global Punkte                                               #hier wird ausgerechnet welchen Score/Punktezahl insgesamt man erreicht hat
-        Punkte=LEVEL*trefferrate
+        Punkte=LEVEL*trefferrate*(Strafpunkt_links_rechts*Strafpunkt_rechts_links)**-1
        
     def schuss(self, x, y):
         if self.schuss == SCHÜSSE:                                 #wenn alle Schüsse verballert sind
