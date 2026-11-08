@@ -282,3 +282,6 @@ if Punkte>0:                                        #man sollte zumindestens etw
         print(bisherige_Bestenliste)                #....und gedruckt
 else:                                               #das ist der Fall, daß alle Schüsse danebengingen
     print("Sie haben kein einziges Moorhuhn abgeschossen!" )
+
+from Kino import*
+from Endlosschleife import*
